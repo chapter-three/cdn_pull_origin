@@ -1,0 +1,6 @@
+cdn_pull_origin.admin_config:
+  title: CDN (Pull origin)
+  parent: system.admin_config_services
+  description: 'Configure CDN integration'
+  route_name: cdn_pull_origin.settings
+  weight: 0

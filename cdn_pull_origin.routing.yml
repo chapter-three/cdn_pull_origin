@@ -1,0 +1,7 @@
+cdn_pull_origin.settings:
+  path: 'admin/config/services/cdn-pull-origin'
+  defaults:
+    _title: 'CDN (pull origin)'
+    _form: '\Drupal\cdn_pull_origin\Form\CDNSettings'
+  requirements:
+    _permission: 'administer site configuration'

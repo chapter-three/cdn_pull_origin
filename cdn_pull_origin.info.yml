@@ -1,0 +1,4 @@
+name: CDN (pull origin)
+type: module
+description: Amazon CloudFront integration module
+core: 8.x

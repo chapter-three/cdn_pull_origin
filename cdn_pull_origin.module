@@ -1,0 +1,47 @@
+<?php
+
+/**
+ * @file
+ * CDN (Pull origin) module.
+ */
+
+use Drupal\Component\Utility\UrlHelper;
+
+/**
+ * Implements hook_file_url_alter().
+ */
+function cdn_pull_origin_file_url_alter(&$uri) {
+  $config = \Drupal::config('cdn_pull_origin.settings');
+  $enabled = !empty($config->get('enabled')) ? TRUE : FALSE;
+  $cdn = $config->get('domain');
+  // Route static files to Amazon CloudFront, for anonymous users only.
+  if (!empty($cdn) && $enabled &&
+  	\Drupal::currentUser()->isAnonymous() &&
+    !\Drupal::request()->isSecure()) {
+ 
+    $scheme = file_uri_scheme($uri);
+    if ($scheme == 'public') {
+      $wrapper = \Drupal::service('stream_wrapper_manager')->getViaScheme($scheme);
+      $path = $wrapper->getDirectoryPath() . '/' . file_uri_target($uri);
+      $uri = "$cdn/" . UrlHelper::encodePath($path);
+    }
+    else if (!$scheme && strpos($uri, '//') !== 0) {
+      $uri = "$cdn/" . UrlHelper::encodePath($uri);
+    }
+  }
+}
+
+/**
+ * Implements hook_css_alter().
+ */
+function cdn_pull_origin_css_alter(&$css) {
+  // Mangle the paths slightly so that Drupal\Core\Asset\AssetDumper will generate
+  // different keys on HTTPS.  Necessary because CDN URL varies by protocol.
+  if (\Drupal::request()->isSecure()) {
+    foreach ($css as $key => $file) {
+      if ($file['type'] === 'file') {
+        $css[$key]['data'] = './' . $css[$key]['data'];
+      }
+    }
+  }
+}
