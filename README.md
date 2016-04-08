@@ -1,4 +1,4 @@
-This is a very simple CDN (pull origin only) module for Drupal 8. Works with Amazon CloudFront.
+This is a very simple CDN (Origin Pull) module for Drupal 8. Works with Amazon CloudFront.
 
 I used code from here: [http://www.metaltoad.com/blog/amazon-cloudfront-with-drupal-8](http://www.metaltoad.com/blog/amazon-cloudfront-with-drupal-8) with some improvements:
 - Fixed deprecated function calls.
